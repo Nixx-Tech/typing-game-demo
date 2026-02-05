@@ -1,52 +1,69 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+// Game variables
+let score = 0;
+let timeLeft = 60;
+let gameInterval;
+let wordToTypeElement = document.getElementById("word-to-type");
+let typedWordElement = document.getElementById("typed-word");
+let scoreElement = document.getElementById("score");
+let timeLeftElement = document.getElementById("time-left");
+
+const words = ["apple", "banana", "cherry", "date", "elderberry", "fig", "grape", "honeydew", "kiwi", "lemon"];
+
+function startGame() {
+  score = 0;
+  timeLeft = 60;
+  updateScore();
+  updateTime();
+  
+  gameInterval = setInterval(function () {
+    if (timeLeft === 0) {
+      clearInterval(gameInterval);
+      alert("Game Over! Final score: " + score);
+      resetGame();
+    } else {
+      timeLeft--;
+      updateTime();
+    }
+  }, 1000);
+  
+  setNewWord();
 }
 
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f0f0f0;
+// Set a new word to type
+function setNewWord() {
+  const randomWord = words[Math.floor(Math.random() * words.length)];
+  wordToTypeElement.textContent = randomWord;
 }
 
-#game-container {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
+// Update score display
+function updateScore() {
+  scoreElement.textContent = "Score: " + score;
 }
 
-#word-container {
-  margin-bottom: 20px;
-  font-size: 32px;
-  font-weight: bold;
-  color: #333;
+// Update time display
+function updateTime() {
+  timeLeftElement.textContent = "Time: " + timeLeft + "s";
 }
 
-#typed-word {
-  width: 80%;
-  padding: 10px;
-  font-size: 20px;
-  margin: 10px 0;
-  border: 2px solid #ccc;
-  border-radius: 5px;
+// Check user input and update score
+typedWordElement.addEventListener("input", function () {
+  if (typedWordElement.value === wordToTypeElement.textContent) {
+    score++;
+    updateScore();
+    setNewWord();
+    typedWordElement.value = "";  // Clear input field
+  }
+});
+
+// Reset the game
+function resetGame() {
+  typedWordElement.value = "";
+  wordToTypeElement.textContent = "Start Typing!";
+  score = 0;
+  timeLeft = 60;
+  updateScore();
+  updateTime();
 }
 
-#score-timer {
-  display: flex;
-  justify-content: space-between;
-  font-size: 20px;
-}
+startGame();  // Start the game when page loads
 
-#score {
-  color: #4caf50;
-}
-
-#time-left {
-  color: #ff5722;
-}
