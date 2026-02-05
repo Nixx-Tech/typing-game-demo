@@ -67,3 +67,4 @@ function resetGame() {
 
 startGame();  // Start the game when page loads
 
+
